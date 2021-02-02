@@ -6,6 +6,7 @@ import Footer from './components/Footer/Footer';
 import Dialogs from "./components/Dialogs/Dialogs";
 import {BrowserRouter, Route} from "react-router-dom";
 import React from 'react';
+import DialogsContainer from "./components/Dialogs/DialogsContainer";
 
 const App = (props) => {
     debugger
@@ -14,10 +15,8 @@ const App = (props) => {
             <Header/>
             <Navbar/>
             <div className={'app-wrapper-content'}>
-                <Route path='/profile' render={() => <Profile state={props.state.profilePage}
-                                                              dispatch={props.dispatch}/>}/>
-                <Route path='/dialogs' render={() => <Dialogs state={props.state.messagesPage}
-                                                              dispatch={props.dispatch}/>}/>
+                <Route path='/profile' render={() => <Profile store={props.store} />}/>
+                <Route path='/dialogs' render={() => <DialogsContainer store={props.store}/>}/>
             </div>
             <Footer/>
         </div>
