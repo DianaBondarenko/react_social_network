@@ -5,20 +5,15 @@ import './index.css';
 import App from './App';
 import store from "./redux/redux_store";
 import {BrowserRouter} from "react-router-dom";
+import {Provider} from "react-redux";
 
-let rerenderEntireDOM = (state) => {
-    debugger
     ReactDOM.render(
         <BrowserRouter>
-            <App state={state} dispatch={store.dispatch.bind(store)} store={store}/>
+            <Provider store={store}>
+                <App dispatch={store.dispatch.bind(store)} store={store}/>
+            </Provider>
         </BrowserRouter>, document.getElementById('root'));
-}
-rerenderEntireDOM(store.getState());
 
-store.subscribe(() => {
-    let state = store.getState();
-    rerenderEntireDOM(state);
-});
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
