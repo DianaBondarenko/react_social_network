@@ -6,3 +6,11 @@
 }
 
 
+.pages a{
+    text-decoration: none;
+    cursor: pointer;
+}
+.selected {
+     color: #F8BBC0;
+     font-weight: bold;
+ }
