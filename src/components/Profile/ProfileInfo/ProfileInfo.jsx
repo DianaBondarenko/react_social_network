@@ -1,14 +1,23 @@
 import s from  './ProfileInfo.module.css'
-const ProfileInfo = () => {
+import Preloader from "../../Preloader/Preloader";
+
+const ProfileInfo = (props) => {
+    if (!props.profile) {
+        return <Preloader />
+    }
+
     return <div className={s.content}>
         <div>
             <img src="https://resources.jetbrains.com/storage/products/jetbrains/img/meta/preview.png" className={s.bg}
                  alt=""/>
         </div>
         <div className={s.description}>
-            <img src="https://pbs.twimg.com/profile_images/1276465732923129856/A_SdJ_cW_400x400.jpg" className={s.ava} alt=""/>
-            <p>Name</p>
-            <p>Description</p>
+            <img src={props.profile.photos.large} className={s.ava} alt=""/>
+            <p><b>{props.profile.fullName}</b></p>
+            <p>{props.profile.aboutMe}</p>
+            <p><a href={"https://"+props.profile.contacts.facebook} target='_blank'>Facebook</a></p>
+            <p><a href={"https://"+props.profile.contacts.github} target='_blank'>Github</a></p>
+            <p>{props.profile.lookingForAJob?<span>Looking for a job</span>:<span>Not looking for a job</span>}</p>
         </div>
     </div>
 }
