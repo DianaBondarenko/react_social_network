@@ -2,32 +2,31 @@ import {connect} from "react-redux";
 import {
     follow,
     setCurrentPage,
-    setFriends, setTotalCount, toggleIsFetching,
+    setFriends, setTotalCount, toggleIsFetching, toggleIsFollowingInProcess,
     unfollow
 } from "../../redux/friends_reducer";
 import axios from "axios";
 import Friends from "./Friends";
 import React from "react";
 import Preloader from "../Preloader/Preloader";
+import {friendsAPI} from "../../api/api";
 
 class FriendsContainer extends React.Component {
     componentDidMount() {
         this.props.toggleIsFetching(true);
-        axios.get(`https://social-network.samuraijs.com/api/1.0/users?page=${this.props.currentPage}&count=${this.props.pageSize}`,
-            {withCredentials:true}).then(response => {
+        friendsAPI.getFriends(this.props.page, this.props.pageSize).then(data => {
             this.props.toggleIsFetching(false);
-            this.props.setFriends(response.data.items);
-            this.props.setTotalCount(response.data.totalCount);
+            this.props.setFriends(data.items);
+            this.props.setTotalCount(data.totalCount);
         })
     }
 
     changePage = (page) => {
         this.props.toggleIsFetching(true);
         this.props.setCurrentPage(page);
-        axios.get(`https://social-network.samuraijs.com/api/1.0/users?page=${page}&count=${this.props.pageSize}`,{withCredentials:true})
-            .then(response => {
+        friendsAPI.getFriends(page,this.props.pageSize).then(data => {
             this.props.toggleIsFetching(false);
-            this.props.setFriends(response.data.items)
+            this.props.setFriends(data.items)
         })
     }
 
@@ -41,7 +40,11 @@ class FriendsContainer extends React.Component {
                         friends={this.props.friends}
                         follow={this.props.follow}
                         unfollow={this.props.unfollow}
-                        isFetching={this.props.isFetching}/>
+                        isFetching={this.props.isFetching}
+                        isFollowingInProcess = {this.props.isFollowingInProcess}
+                        toggleIsFollowingInProcess={this.props.toggleIsFollowingInProcess}
+
+            />
         </>
     }
 
@@ -109,7 +112,8 @@ let mapStateToProps = (state) => {
         pageSize: state.friendsPage.pageSize,
         totalFriendsCount: state.friendsPage.totalFriendsCount,
         currentPage: state.friendsPage.currentPage,
-        isFetching: state.friendsPage.isFetching
+        isFetching: state.friendsPage.isFetching,
+        isFollowingInProcess: state.friendsPage.isFollowingInProcess
     }
 
 }
@@ -138,5 +142,5 @@ let mapStateToProps = (state) => {
 }*/
 
 export default connect(mapStateToProps, {
-    unfollow, follow, setFriends, setCurrentPage, setTotalCount, toggleIsFetching
+    unfollow, follow, setFriends, setCurrentPage, setTotalCount, toggleIsFetching, toggleIsFollowingInProcess
 })(FriendsContainer);

@@ -2,7 +2,8 @@ import s from './Friends.module.css'
 import React from "react";
 import ava from "../../assets/img/ava.jpg"
 import {NavLink} from "react-router-dom";
-import axios from "axios";
+import {friendsAPI} from "../../api/api";
+import {toggleIsFollowingInProcess} from "../../redux/friends_reducer";
 
 let Friends = (props) => {
     let pagesCount = Math.ceil(props.totalFriendsCount / props.pageSize);
@@ -33,29 +34,29 @@ let Friends = (props) => {
                                 </NavLink>
                             </div>
                             <div>
-                                {f.Followed
-                                    ? <button onClick={
+                                {f.followed
+                                    ? <button disabled={props.isFollowingInProcess.some(id => id === f.id)} onClick={
                                         () => {
-                                            axios.delete(`https://social-network.samuraijs.com/api/1.0/follow/${f.id}`,
-                                                {withCredentials:true, headers:{"API-KEY": "ee38d065-aff4-4f69-9049-98c8edc3a632"}})
-                                                .then(response => {
-                                                    if(response.data.resultCode === 0) {
+                                            props.toggleIsFollowingInProcess(true, f.id);
+                                            friendsAPI.unfollow(f.id).then(data => {
+                                                    if(data.resultCode === 0) {
                                                         props.unfollow(f.id)
                                                     }
-                                                });
+                                                props.toggleIsFollowingInProcess(false, f.id);
+                                            });
                                             //props.unfollow(f.id)
                                         }}
 
                                     >Unfollow</button>
 
-                                    : <button onClick={
+                                    : <button disabled={props.isFollowingInProcess.some(id => id === f.id)} onClick={
                                         () => {
-                                            axios.post(`https://social-network.samuraijs.com/api/1.0/follow/${f.id}`, {},
-                                                {withCredentials:true, headers:{"API-KEY": "ee38d065-aff4-4f69-9049-98c8edc3a632"}})
-                                                .then(response => {
-                                                    if(response.data.resultCode === 0) {
+                                            props.toggleIsFollowingInProcess(true, f.id);
+                                            friendsAPI.follow(f.id).then(data => {
+                                                    if(data.resultCode === 0) {
                                                         props.follow(f.id)
                                                     }
+                                                    props.toggleIsFollowingInProcess(false, f.id);
                                             });
                                             //props.follow(f.id)
                                         }}
